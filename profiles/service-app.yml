@@ -5,9 +5,12 @@ services:
     image: test-service:0.1.0-SNAPSHOT
     ports:
       - 8080:8080
+#    links:
+#      - eureka-server
     environment:
       - S_POSTGRES_HOST=postgres
       - S_KAFKA_BOOTSTRAP_HOST=kafka:9092
+#      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
     depends_on:
       - kafka
       - postgres

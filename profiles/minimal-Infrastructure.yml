@@ -1,6 +1,10 @@
 version: '3'
 
 services:
+#  eureka-server:
+#    image: #eureka-server-image-name
+#    ports:
+#      - 8761:8761
   zookeeper:
     image: 'bitnami/zookeeper:latest'
     ports:
