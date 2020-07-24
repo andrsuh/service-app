@@ -216,12 +216,13 @@
                     </dependency>
                 </dependencies>
 
+                <configuration>
+                    <repository>${env.DOCKER_REGISTRY_IP}:5000/${project.artifactId}</repository>
+                </configuration>
+
                 <executions>
                     <execution>
                         <id>build image</id>
-                        <configuration>
-                            <repository>${env.DOCKER_REGISTRY_IP}:5000/${project.artifactId}</repository>
-                        </configuration>
                         <phase>deploy</phase>
                         <goals>
                             <goal>build</goal>
@@ -230,7 +231,7 @@
                     <execution>
                         <id>branch tag</id>
                         <configuration>
-                            <repository>${env.DOCKER_REGISTRY_IP}:5000/${project.artifactId}:${scmBranch}</repository>
+                            <tag>${scmBranch}</tag>
                         </configuration>
                         <phase>deploy</phase>
                         <goals>
@@ -240,7 +241,7 @@
                     <execution>
                         <id>version tag</id>
                         <configuration>
-                            <repository>${env.DOCKER_REGISTRY_IP}:5000/${project.artifactId}:${current-version}</repository>
+                            <tag>${current-version}</tag>
                         </configuration>
                         <phase>deploy</phase>
                         <goals>
@@ -249,9 +250,6 @@
                     </execution>
                     <execution>
                         <id>push image</id>
-                        <configuration>
-                            <repository>${env.DOCKER_REGISTRY_IP}:5000/${project.artifactId}</repository>
-                        </configuration>
                         <phase>deploy</phase>
                         <goals>
                             <goal>push</goal>
