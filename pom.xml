@@ -32,9 +32,8 @@
         <postgres.driver.version>42.2.14</postgres.driver.version>
 
         <buildnumber-maven-plugin.version>1.4</buildnumber-maven-plugin.version>
-        <docker-maven-plugin.version>1.0.0</docker-maven-plugin.version>
+        <dockerfile-maven-plugin.version>1.4.13</dockerfile-maven-plugin.version>
         <flyway.version>6.5.1</flyway.version>
-        <dockerfile-maven-version>1.4.13</dockerfile-maven-version>
     </properties>
 
     <dependencies>
@@ -189,98 +188,77 @@
                     <doUpdate>false</doUpdate>
                 </configuration>
             </plugin>
+            <!-- Нужен для сборки толстого jar, наследуется от parent -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.3.1.RELEASE</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Нужен для сборки docker image с тегами, и его пуша в docker registry -->
             <plugin>
                 <groupId>com.spotify</groupId>
                 <artifactId>dockerfile-maven-plugin</artifactId>
-                <version>${dockerfile-maven-version}</version>
+                <version>${dockerfile-maven-plugin.version}</version>
+
+                <dependencies>
+                    <!-- Замещает slf4j по умолчанию, который вызывал бы ошибку -->
+                    <dependency>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-simple</artifactId>
+                        <version>1.7.21</version>
+                    </dependency>
+                </dependencies>
+
                 <executions>
                     <execution>
-                        <id>default</id>
+                        <id>build image</id>
+                        <configuration>
+                            <repository>${env.DOCKER_REGISTRY_IP}:5000/${project.artifactId}</repository>
+                        </configuration>
+                        <phase>deploy</phase>
                         <goals>
                             <goal>build</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>branch tag</id>
+                        <configuration>
+                            <repository>${env.DOCKER_REGISTRY_IP}:5000/${project.artifactId}:${scmBranch}</repository>
+                        </configuration>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>tag</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>version tag</id>
+                        <configuration>
+                            <repository>${env.DOCKER_REGISTRY_IP}:5000/${project.artifactId}:${current-version}</repository>
+                        </configuration>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>tag</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>push image</id>
+                        <configuration>
+                            <repository>${env.DOCKER_REGISTRY_IP}:5000/${project.artifactId}</repository>
+                        </configuration>
+                        <phase>deploy</phase>
+                        <goals>
                             <goal>push</goal>
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <repository>${env.DOCKER_REGISTRY_IP}:5000/${project.artifactId}</repository>
-                    <dockerfile.contextDirectory>.</dockerfile.contextDirectory>
-                    <tag>${project.version}</tag>
-                    <buildArgs>
-                        <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
-                    </buildArgs>
-                </configuration>
             </plugin>
-            <!-- Нужен для сборки docker image с тегами, и его пуша в docker registry -->
-<!--            <plugin>-->
-
-<!--                <groupId>com.spotify</groupId>-->
-<!--                <artifactId>docker-maven-plugin</artifactId>-->
-<!--                <version>${docker-maven-plugin.version}</version>-->
-
-<!--                <configuration>-->
-
-<!--                    <image>${project.artifactId}</image>-->
-<!--                    <newName>${env.DOCKER_REGISTRY_IP}:5000/${project.artifactId}</newName>-->
-
-<!--                    <imageName>${project.artifactId}</imageName>-->
-<!--&lt;!&ndash;                    <forceTags>true</forceTags>&ndash;&gt;-->
-<!--&lt;!&ndash;                    <imageTags>&ndash;&gt;-->
-<!--&lt;!&ndash;                        <imageTag>${scmBranch}</imageTag>&ndash;&gt;-->
-<!--&lt;!&ndash;                        <imageTag>${current-version}</imageTag>&ndash;&gt;-->
-<!--&lt;!&ndash;                    </imageTags>&ndash;&gt;-->
-<!--                    <dockerDirectory>.</dockerDirectory>-->
-<!--                    <dockerHost>http://${env.DOCKER_IP}:2375</dockerHost>-->
-<!--                    <resources>-->
-<!--                        <resource>-->
-<!--                            <directory>${project.build.directory}</directory>-->
-<!--                            <include>${project.build.finalName}.jar</include>-->
-<!--                        </resource>-->
-<!--                    </resources>-->
-<!--                </configuration>-->
-
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>build-image</id>-->
-<!--                        <phase>package</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>build</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                    <execution>-->
-<!--                        <id>tag-image</id>-->
-<!--                        <phase>package</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>tag</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <forceTags>true</forceTags>-->
-<!--                            <newName>${scmBranch}</newName>-->
-<!--                            <newName>${current-version}</newName>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--&lt;!&ndash;                    <execution>&ndash;&gt;-->
-<!--&lt;!&ndash;                        <id>version tag</id>&ndash;&gt;-->
-<!--&lt;!&ndash;                        <configuration>&ndash;&gt;-->
-<!--&lt;!&ndash;                            <newName>${current-version}</newName>&ndash;&gt;-->
-<!--&lt;!&ndash;                        </configuration>&ndash;&gt;-->
-<!--&lt;!&ndash;                        <phase>deploy</phase>&ndash;&gt;-->
-<!--&lt;!&ndash;                        <goals>&ndash;&gt;-->
-<!--&lt;!&ndash;                            <goal>tag</goal>&ndash;&gt;-->
-<!--&lt;!&ndash;                        </goals>&ndash;&gt;-->
-<!--&lt;!&ndash;                    </execution>&ndash;&gt;-->
-<!--                    <execution>-->
-<!--                        <id>push-image</id>-->
-<!--                        <configuration>-->
-<!--                            <imageName>${env.DOCKER_REGISTRY_IP}:5000/${project.artifactId}</imageName>-->
-<!--                        </configuration>-->
-<!--                        <phase>deploy</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>push</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
         </plugins>
     </build>
 </project>
