@@ -32,9 +32,8 @@
         <postgres.driver.version>42.2.14</postgres.driver.version>
 
         <buildnumber-maven-plugin.version>1.4</buildnumber-maven-plugin.version>
-        <docker-maven-plugin.version>1.0.0</docker-maven-plugin.version>
         <flyway.version>6.5.1</flyway.version>
-        <dockerfile-maven-version>1.4.13</dockerfile-maven-version>
+        <dockerfile-maven-plugin.version>1.4.13</dockerfile-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -194,6 +193,62 @@
                     <doCheck>false</doCheck>
                     <doUpdate>false</doUpdate>
                 </configuration>
+            </plugin>
+
+            <!-- Нужен для сборки docker image с тегами, и его пуша в docker registry -->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <version>${dockerfile-maven-plugin.version}</version>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-logging</artifactId>
+                        <version>${project.parent.version}</version>
+                    </dependency>
+                </dependencies>
+
+                <configuration>
+                    <repository>${env.DOCKER_REGISTRY_IP}:5000/${project.artifactId}</repository>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <id>build image</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>branch tag</id>
+                        <configuration>
+                            <tag>${scmBranch}</tag>
+                        </configuration>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>tag</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>version tag</id>
+                        <configuration>
+                            <tag>${current-version}</tag>
+                        </configuration>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>tag</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>push image</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>push</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
