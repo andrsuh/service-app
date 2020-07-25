@@ -219,6 +219,7 @@
                         <phase>deploy</phase>
                         <goals>
                             <goal>build</goal>
+                            <goal>push</goal>
                         </goals>
                     </execution>
                     <execution>
@@ -229,6 +230,7 @@
                         <phase>deploy</phase>
                         <goals>
                             <goal>tag</goal>
+                            <goal>push</goal>
                         </goals>
                     </execution>
                     <execution>
@@ -239,12 +241,6 @@
                         <phase>deploy</phase>
                         <goals>
                             <goal>tag</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>push image</id>
-                        <phase>deploy</phase>
-                        <goals>
                             <goal>push</goal>
                         </goals>
                     </execution>
