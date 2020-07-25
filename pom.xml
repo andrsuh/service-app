@@ -192,14 +192,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.3.1.RELEASE</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <!-- Нужен для сборки docker image с тегами, и его пуша в docker registry -->
             <plugin>
@@ -208,11 +200,10 @@
                 <version>${dockerfile-maven-plugin.version}</version>
 
                 <dependencies>
-                    <!-- Замещает slf4j по умолчанию, который вызывал бы ошибку -->
                     <dependency>
-                        <groupId>org.slf4j</groupId>
-                        <artifactId>slf4j-simple</artifactId>
-                        <version>1.7.21</version>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-logging</artifactId>
+                        <version>${project.parent.version}</version>
                     </dependency>
                 </dependencies>
 
