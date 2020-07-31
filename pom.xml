@@ -211,36 +211,15 @@
 
                 <configuration>
                     <repository>${env.DOCKER_REGISTRY_IP}:5000/${project.artifactId}</repository>
+                    <tag>${scmBranch}_${current-version}</tag>
                 </configuration>
 
                 <executions>
                     <execution>
-                        <id>build image</id>
+                        <id>build and push image</id>
                         <phase>deploy</phase>
                         <goals>
                             <goal>build</goal>
-                            <goal>push</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>branch tag</id>
-                        <configuration>
-                            <tag>${scmBranch}</tag>
-                        </configuration>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>tag</goal>
-                            <goal>push</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>version tag</id>
-                        <configuration>
-                            <tag>${current-version}</tag>
-                        </configuration>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>tag</goal>
                             <goal>push</goal>
                         </goals>
                     </execution>
