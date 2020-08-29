@@ -1,7 +1,7 @@
 package com.wine.to.up.demo.service.messaging;
 
 import com.wine.to.up.demo.service.annotations.InjectEventLogger;
-import com.wine.to.up.demo.service.api.message.KafkaServiceEventOuterClass.KafkaServiceEvent;
+import com.wine.to.up.demo.service.api.message.MessageSentToKafkaEventOuterClass.MessageSentToKafkaEvent;
 import com.wine.to.up.demo.service.components.AppMetrics;
 import com.wine.to.up.demo.service.logging.EventLogger;
 import com.wine.to.up.demo.service.logging.NotableEvents;
@@ -15,7 +15,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 @Slf4j
 public class KafkaMessageSender<T> {
     /**
-     * Producer that is configured for sending {@link KafkaServiceEvent}
+     * Producer that is configured for sending {@link MessageSentToKafkaEvent}
      */
     private final KafkaProducer<String, T> producer;
     /**

@@ -1,9 +1,9 @@
 package com.wine.to.up.demo.service.controller;
 
 import com.google.protobuf.ByteString;
-import com.wine.to.up.demo.service.api.dto.ServiceMessage;
+import com.wine.to.up.demo.service.api.dto.DemoServiceMessage;
 import com.wine.to.up.demo.service.api.message.KafkaMessageHeaderOuterClass;
-import com.wine.to.up.demo.service.api.message.KafkaServiceEventOuterClass.KafkaServiceEvent;
+import com.wine.to.up.demo.service.api.message.MessageSentToKafkaEventOuterClass.MessageSentToKafkaEvent;
 import com.wine.to.up.demo.service.messaging.KafkaMessageSender;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,13 +36,13 @@ public class KafkaController {
     /**
      * Service for sending messages
      */
-    private KafkaMessageSender<KafkaServiceEvent> kafkaSendMessageService;
+    private KafkaMessageSender<MessageSentToKafkaEvent> kafkaSendMessageService;
 
     private final ExecutorService executorService = Executors.newFixedThreadPool(3);
 
 
     @Autowired
-    public KafkaController(KafkaMessageSender<KafkaServiceEvent> kafkaSendMessageService) {
+    public KafkaController(KafkaMessageSender<MessageSentToKafkaEvent> kafkaSendMessageService) {
         this.kafkaSendMessageService = kafkaSendMessageService;
     }
 
@@ -52,7 +52,7 @@ public class KafkaController {
      */
     @PostMapping(value = "/send")
     public void sendMessage(@RequestBody String message) {
-        sendMessageWithHeaders(new ServiceMessage(Collections.emptyMap(), message));
+        sendMessageWithHeaders(new DemoServiceMessage(Collections.emptyMap(), message));
     }
 
     /**
@@ -60,10 +60,10 @@ public class KafkaController {
      * Sends message with headers
      */
     @PostMapping(value = "/send/headers")
-    public void sendMessageWithHeaders(@RequestBody ServiceMessage message) {
+    public void sendMessageWithHeaders(@RequestBody DemoServiceMessage message) {
         AtomicInteger counter = new AtomicInteger(0);
 
-        KafkaServiceEvent event = KafkaServiceEvent.newBuilder()
+        MessageSentToKafkaEvent event = MessageSentToKafkaEvent.newBuilder()
                 .addAllHeaders(message.getHeaders().entrySet().stream()
                         .map(entry -> KafkaMessageHeaderOuterClass.KafkaMessageHeader.newBuilder()
                                 .setKey(entry.getKey())
