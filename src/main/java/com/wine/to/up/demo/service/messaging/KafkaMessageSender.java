@@ -1,7 +1,6 @@
-package com.wine.to.up.demo.service.service;
+package com.wine.to.up.demo.service.messaging;
 
 import com.wine.to.up.demo.service.annotations.InjectEventLogger;
-import com.wine.to.up.demo.service.api.ServiceApiProperties;
 import com.wine.to.up.demo.service.api.message.KafkaServiceEventOuterClass.KafkaServiceEvent;
 import com.wine.to.up.demo.service.components.AppMetrics;
 import com.wine.to.up.demo.service.logging.EventLogger;
@@ -9,23 +8,20 @@ import com.wine.to.up.demo.service.logging.NotableEvents;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * Service for sending messages
  */
-@Service
 @Slf4j
-public class KafkaSendMessageService {
+public class KafkaMessageSender<T> {
     /**
      * Producer that is configured for sending {@link KafkaServiceEvent}
      */
-    private final KafkaProducer<String, KafkaServiceEvent> producer;
+    private final KafkaProducer<String, T> producer;
     /**
-     * Properties from api. Defines topic
+     * Topic to send to
      */
-    private final ServiceApiProperties apiProperties;
+    private final String topicName;
 
     /**
      * Important metrics. Integrated with Micrometer
@@ -39,27 +35,25 @@ public class KafkaSendMessageService {
     @SuppressWarnings("unused")
     private EventLogger eventLogger;
 
-    @Autowired
-    public KafkaSendMessageService(KafkaProducer<String, KafkaServiceEvent> producer,
-                                   AppMetrics appMetrics,
-                                   ServiceApiProperties apiProperties) {
+    public KafkaMessageSender(KafkaProducer<String, T> producer,
+                              String topicName,
+                              AppMetrics appMetrics) {
         this.appMetrics = appMetrics;
         this.producer = producer;
-        this.apiProperties = apiProperties;
+        this.topicName = topicName;
     }
 
     /**
      * Sends a single message to the topic
      */
-    public void sendMessage(KafkaServiceEvent event) {
-        String topicName = apiProperties.getTopicName();
-        ProducerRecord<String, KafkaServiceEvent> record = new ProducerRecord<>(topicName, event);
+    public void sendMessage(T message) {
+        ProducerRecord<String, T> record = new ProducerRecord<>(topicName, message);
         producer.send(record, (metadata, exception) -> {
             if (exception != null) {
                 eventLogger.warn(NotableEvents.W_KAFKA_SEND_MESSAGE_FAILED, topicName);
                 return;
             }
-            log.debug("Message sent to Kafka topic: {}, event: {}", topicName, event);
+            log.debug("Message sent to Kafka topic: {}, event: {}", topicName, message);
             appMetrics.countKafkaMessageSent(topicName);
         });
     }

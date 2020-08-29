@@ -4,7 +4,7 @@ import com.google.protobuf.ByteString;
 import com.wine.to.up.demo.service.api.dto.ServiceMessage;
 import com.wine.to.up.demo.service.api.message.KafkaMessageHeaderOuterClass;
 import com.wine.to.up.demo.service.api.message.KafkaServiceEventOuterClass.KafkaServiceEvent;
-import com.wine.to.up.demo.service.service.KafkaSendMessageService;
+import com.wine.to.up.demo.service.messaging.KafkaMessageSender;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +36,13 @@ public class KafkaController {
     /**
      * Service for sending messages
      */
-    private KafkaSendMessageService kafkaSendMessageService;
+    private KafkaMessageSender<KafkaServiceEvent> kafkaSendMessageService;
 
     private final ExecutorService executorService = Executors.newFixedThreadPool(3);
 
 
     @Autowired
-    public KafkaController(KafkaSendMessageService kafkaSendMessageService) {
+    public KafkaController(KafkaMessageSender<KafkaServiceEvent> kafkaSendMessageService) {
         this.kafkaSendMessageService = kafkaSendMessageService;
     }
 

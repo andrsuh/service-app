@@ -2,8 +2,10 @@ package com.wine.to.up.demo.service.configuration;
 
 import com.wine.to.up.demo.service.api.ServiceApiProperties;
 import com.wine.to.up.demo.service.api.message.KafkaServiceEventOuterClass.KafkaServiceEvent;
+import com.wine.to.up.demo.service.components.AppMetrics;
 import com.wine.to.up.demo.service.messaging.BaseKafkaHandler;
 import com.wine.to.up.demo.service.messaging.KafkaMessageHandler;
+import com.wine.to.up.demo.service.messaging.KafkaMessageSender;
 import com.wine.to.up.demo.service.messaging.TestTopicKafkaMessageHandler;
 import com.wine.to.up.demo.service.messaging.serialization.EventDeserializer;
 import com.wine.to.up.demo.service.messaging.serialization.EventSerializer;
@@ -37,16 +39,16 @@ public class KafkaConfiguration {
     private String applicationConsumerGroupId;
 
     /**
-     * Configure producer. Define producer that send events to string topic
+     * Creating general producer properties. Common for all the producers
      */
     @Bean
-    public KafkaProducer<String, KafkaServiceEvent> kafkaProducer() {
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public Properties producerProperties() {
         Properties properties = new Properties();
         properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokers);
         properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, EventSerializer.class.getName());
 
-        return new KafkaProducer<>(properties);
+        return properties;
     }
 
     /**
@@ -89,5 +91,25 @@ public class KafkaConfiguration {
 
         // bind consumer with topic name and with appropriate handler
         return new BaseKafkaHandler<>(serviceApiProperties.getTopicName(), new KafkaConsumer<>(consumerProperties), handler);
+    }
+
+    /**
+     * Creates sender based on general properties. It helps to send single message to designated topic.
+     * <p>
+     * Uses custom serializer as the messages within single topic should be the same type. And
+     * the messages in different topics can have different types and require different serializers
+     *
+     * @param producerProperties is the general producer properties. {@link #producerProperties()}
+     * @param serviceApiProperties class containing the values of the given service's API properties (in this particular case topic name)
+     * @param appMetrics class encapsulating the logic of the metrics collecting and publishing
+     */
+    @Bean
+    KafkaMessageSender<KafkaServiceEvent> testTopicKafkaMessageSender(Properties producerProperties,
+                                                                      ServiceApiProperties serviceApiProperties,
+                                                                      AppMetrics appMetrics) {
+        // set appropriate serializer for value
+        producerProperties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, EventSerializer.class.getName());
+
+        return new KafkaMessageSender<>(new KafkaProducer<>(producerProperties), serviceApiProperties.getTopicName(), appMetrics);
     }
 }
