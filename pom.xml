@@ -19,7 +19,7 @@
         <current-version>0.1.1</current-version>
         <!-- Нужен для scm -->
         <git.username>andrsuh</git.username>
-        <git.repo>service-app</git.repo>
+        <git.repo>demo-service</git.repo>
 
 
         <lombok.version>1.18.10</lombok.version>
