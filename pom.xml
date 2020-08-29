@@ -30,7 +30,7 @@
         <micrometer.version>1.5.2</micrometer.version>
         <simpleclient.version>0.8.1</simpleclient.version>
         <postgres.driver.version>42.2.14</postgres.driver.version>
-        <service.api.version>0.1.0-SNAPSHOT</service.api.version>
+        <demo.service.api.version>0.2.0-SNAPSHOT</demo.service.api.version>
 
         <buildnumber-maven-plugin.version>1.4</buildnumber-maven-plugin.version>
         <flyway.version>6.5.1</flyway.version>
@@ -136,7 +136,7 @@
         <dependency>
             <groupId>com.wine.to.up</groupId>
             <artifactId>demo-service-api</artifactId>
-            <version>${service.api.version}</version>
+            <version>${demo.service.api.version}</version>
         </dependency>
     </dependencies>
 

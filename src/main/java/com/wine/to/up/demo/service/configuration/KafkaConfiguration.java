@@ -1,10 +1,12 @@
 package com.wine.to.up.demo.service.configuration;
 
-import com.wine.to.up.api.message.KafkaServiceEventOuterClass.KafkaServiceEvent;
 import com.wine.to.up.demo.service.api.ServiceApiProperties;
-import com.wine.to.up.demo.service.kafka.BaseKafkaHandler;
-import com.wine.to.up.demo.service.kafka.KafkaMessageHandler;
-import com.wine.to.up.demo.service.kafka.TestTopicKafkaMessageHandler;
+import com.wine.to.up.demo.service.api.message.KafkaServiceEventOuterClass.KafkaServiceEvent;
+import com.wine.to.up.demo.service.messaging.BaseKafkaHandler;
+import com.wine.to.up.demo.service.messaging.KafkaMessageHandler;
+import com.wine.to.up.demo.service.messaging.TestTopicKafkaMessageHandler;
+import com.wine.to.up.demo.service.messaging.serialization.EventDeserializer;
+import com.wine.to.up.demo.service.messaging.serialization.EventSerializer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.OffsetResetStrategy;
@@ -79,13 +81,13 @@ public class KafkaConfiguration {
      * @param handler            which is responsible for handling messages from this topic
      */
     @Bean
-    BaseKafkaHandler<KafkaServiceEvent> anotherTopicHandler(Properties consumerProperties,
-                                                            ServiceApiProperties serviceApiProperties,
-                                                            TestTopicKafkaMessageHandler handler) {
+    BaseKafkaHandler<KafkaServiceEvent> testTopicMessagesHandler(Properties consumerProperties,
+                                                                 ServiceApiProperties serviceApiProperties,
+                                                                 TestTopicKafkaMessageHandler handler) {
         // set appropriate deserializer for value
         consumerProperties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, EventDeserializer.class.getName());
 
         // bind consumer with topic name and with appropriate handler
-        return new BaseKafkaHandler<>(serviceApiProperties.getTopicName(), new KafkaConsumer<>(consumerProperties), handler); // todo sukhoa topic property
+        return new BaseKafkaHandler<>(serviceApiProperties.getTopicName(), new KafkaConsumer<>(consumerProperties), handler);
     }
 }

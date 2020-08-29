@@ -1,8 +1,8 @@
 package com.wine.to.up.demo.service.service;
 
-import com.wine.to.up.api.message.KafkaServiceEventOuterClass.KafkaServiceEvent;
 import com.wine.to.up.demo.service.annotations.InjectEventLogger;
 import com.wine.to.up.demo.service.api.ServiceApiProperties;
+import com.wine.to.up.demo.service.api.message.KafkaServiceEventOuterClass.KafkaServiceEvent;
 import com.wine.to.up.demo.service.components.AppMetrics;
 import com.wine.to.up.demo.service.logging.EventLogger;
 import com.wine.to.up.demo.service.logging.NotableEvents;
@@ -21,7 +21,7 @@ public class KafkaSendMessageService {
     /**
      * Producer that is configured for sending {@link KafkaServiceEvent}
      */
-    private final KafkaProducer<String, KafkaServiceEvent> producer; // todo sukhoa investigate thread safety
+    private final KafkaProducer<String, KafkaServiceEvent> producer;
     /**
      * Properties from api. Defines topic
      */

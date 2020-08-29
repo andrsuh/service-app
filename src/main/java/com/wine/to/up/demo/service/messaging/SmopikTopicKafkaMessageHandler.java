@@ -1,4 +1,4 @@
-package com.wine.to.up.demo.service.kafka;
+package com.wine.to.up.demo.service.messaging;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

@@ -1,13 +1,12 @@
 package com.wine.to.up.demo.service.controller;
 
 import com.google.protobuf.ByteString;
-import com.wine.to.up.api.message.KafkaMessageHeaderOuterClass.KafkaMessageHeader;
 import com.wine.to.up.demo.service.api.dto.ServiceMessage;
+import com.wine.to.up.demo.service.api.message.KafkaMessageHeaderOuterClass;
+import com.wine.to.up.demo.service.api.message.KafkaServiceEventOuterClass.KafkaServiceEvent;
 import com.wine.to.up.demo.service.service.KafkaSendMessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.common.header.Headers;
-import org.apache.kafka.common.header.internals.RecordHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +21,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
-import static com.wine.to.up.api.message.KafkaServiceEventOuterClass.KafkaServiceEvent;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -39,6 +37,9 @@ public class KafkaController {
      * Service for sending messages
      */
     private KafkaSendMessageService kafkaSendMessageService;
+
+    private final ExecutorService executorService = Executors.newFixedThreadPool(3);
+
 
     @Autowired
     public KafkaController(KafkaSendMessageService kafkaSendMessageService) {
@@ -61,12 +62,10 @@ public class KafkaController {
     @PostMapping(value = "/send/headers")
     public void sendMessageWithHeaders(@RequestBody ServiceMessage message) {
         AtomicInteger counter = new AtomicInteger(0);
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
-        Headers headers = new RecordHeaders();
-        message.getHeaders().forEach(headers::add);
+
         KafkaServiceEvent event = KafkaServiceEvent.newBuilder()
                 .addAllHeaders(message.getHeaders().entrySet().stream()
-                        .map(entry -> KafkaMessageHeader.newBuilder()
+                        .map(entry -> KafkaMessageHeaderOuterClass.KafkaMessageHeader.newBuilder()
                                 .setKey(entry.getKey())
                                 .setValue(ByteString.copyFrom(entry.getValue()))
                                 .build())
@@ -75,7 +74,7 @@ public class KafkaController {
                 .build();
 
         int sent = Stream.iterate(1, v -> v + 1)
-                .limit(10)
+                .limit(3)
                 .map(n -> executorService.submit(() -> {
                     int numOfMessages = 10;
                     for (int j = 0; j < numOfMessages; j++) {

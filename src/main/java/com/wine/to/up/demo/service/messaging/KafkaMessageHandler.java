@@ -1,4 +1,4 @@
-package com.wine.to.up.demo.service.kafka;
+package com.wine.to.up.demo.service.messaging;
 
 public interface KafkaMessageHandler<Message> {
 

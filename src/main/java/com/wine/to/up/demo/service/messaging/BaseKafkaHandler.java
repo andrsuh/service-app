@@ -1,4 +1,4 @@
-package com.wine.to.up.demo.service.kafka;
+package com.wine.to.up.demo.service.messaging;
 
 import com.wine.to.up.demo.service.annotations.InjectEventLogger;
 import com.wine.to.up.demo.service.logging.EventLogger;
