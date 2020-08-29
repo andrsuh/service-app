@@ -24,7 +24,7 @@ public class TestTopicKafkaMessageHandler implements KafkaMessageHandler<KafkaMe
     @Override
     public void handle(KafkaMessageSentEvent message) {
         counter.incrementAndGet();
-        log.info("Message received from test topic: test, number of messages: {}", counter.get());
+        log.info("Message received message of type {}, number of messages: {}", message.getClass().getSimpleName(), counter.get());
         messageRepository.save(new Message(message.getMessage()));
     }
 }
