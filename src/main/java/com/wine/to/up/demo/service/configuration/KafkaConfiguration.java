@@ -1,7 +1,7 @@
 package com.wine.to.up.demo.service.configuration;
 
 import com.wine.to.up.demo.service.api.DemoServiceApiProperties;
-import com.wine.to.up.demo.service.api.message.MessageSentToKafkaEventOuterClass.MessageSentToKafkaEvent;
+import com.wine.to.up.demo.service.api.message.KafkaMessageSentEventOuterClass.KafkaMessageSentEvent;
 import com.wine.to.up.demo.service.components.AppMetrics;
 import com.wine.to.up.demo.service.messaging.BaseKafkaHandler;
 import com.wine.to.up.demo.service.messaging.KafkaMessageHandler;
@@ -83,14 +83,14 @@ public class KafkaConfiguration {
      * @param handler            which is responsible for handling messages from this topic
      */
     @Bean
-    BaseKafkaHandler<MessageSentToKafkaEvent> testTopicMessagesHandler(Properties consumerProperties,
-                                                                       DemoServiceApiProperties demoServiceApiProperties,
-                                                                       TestTopicKafkaMessageHandler handler) {
+    BaseKafkaHandler<KafkaMessageSentEvent> testTopicMessagesHandler(Properties consumerProperties,
+                                                                     DemoServiceApiProperties demoServiceApiProperties,
+                                                                     TestTopicKafkaMessageHandler handler) {
         // set appropriate deserializer for value
         consumerProperties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, EventDeserializer.class.getName());
 
         // bind consumer with topic name and with appropriate handler
-        return new BaseKafkaHandler<>(demoServiceApiProperties.getTopicName(), new KafkaConsumer<>(consumerProperties), handler);
+        return new BaseKafkaHandler<>(demoServiceApiProperties.getMessageSentTopicName(), new KafkaConsumer<>(consumerProperties), handler);
     }
 
     /**
@@ -104,12 +104,12 @@ public class KafkaConfiguration {
      * @param appMetrics               class encapsulating the logic of the metrics collecting and publishing
      */
     @Bean
-    KafkaMessageSender<MessageSentToKafkaEvent> testTopicKafkaMessageSender(Properties producerProperties,
-                                                                            DemoServiceApiProperties demoServiceApiProperties,
-                                                                            AppMetrics appMetrics) {
+    KafkaMessageSender<KafkaMessageSentEvent> testTopicKafkaMessageSender(Properties producerProperties,
+                                                                          DemoServiceApiProperties demoServiceApiProperties,
+                                                                          AppMetrics appMetrics) {
         // set appropriate serializer for value
         producerProperties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, EventSerializer.class.getName());
 
-        return new KafkaMessageSender<>(new KafkaProducer<>(producerProperties), demoServiceApiProperties.getTopicName(), appMetrics);
+        return new KafkaMessageSender<>(new KafkaProducer<>(producerProperties), demoServiceApiProperties.getMessageSentTopicName(), appMetrics);
     }
 }

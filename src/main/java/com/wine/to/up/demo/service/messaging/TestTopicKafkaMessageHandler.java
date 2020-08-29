@@ -1,6 +1,6 @@
 package com.wine.to.up.demo.service.messaging;
 
-import com.wine.to.up.demo.service.api.message.MessageSentToKafkaEventOuterClass.MessageSentToKafkaEvent;
+import com.wine.to.up.demo.service.api.message.KafkaMessageSentEventOuterClass.KafkaMessageSentEvent;
 import com.wine.to.up.demo.service.domain.entity.Message;
 import com.wine.to.up.demo.service.repository.MessageRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 @Slf4j
-public class TestTopicKafkaMessageHandler implements KafkaMessageHandler<MessageSentToKafkaEvent> {
+public class TestTopicKafkaMessageHandler implements KafkaMessageHandler<KafkaMessageSentEvent> {
     private final MessageRepository messageRepository;
 
     private final AtomicInteger counter = new AtomicInteger(0);
@@ -22,7 +22,7 @@ public class TestTopicKafkaMessageHandler implements KafkaMessageHandler<Message
     }
 
     @Override
-    public void handle(MessageSentToKafkaEvent message) {
+    public void handle(KafkaMessageSentEvent message) {
         counter.incrementAndGet();
         log.info("Message received from test topic: test, number of messages: {}", counter.get());
         messageRepository.save(new Message(message.getMessage()));
