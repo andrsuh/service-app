@@ -1,18 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>log.log</file>
-        <rollingPolicy
-                class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- daily rollover -->
-            <fileNamePattern>log.%d{yyyy-MM-dd}.log</fileNamePattern>
-
-            <!-- Store log-files 1 day -->
-            <maxHistory>1</maxHistory>
-
-            <!--MaxFileSize for 1 log-file -->
-            <maxFileSize>5MB</maxFileSize>
-        </rollingPolicy>
+    <appender name="stash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>logstash:4560</destination>
         <encoder>
             <pattern>%d{dd.MM.yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{20} - %msg%n</pattern>
         </encoder>
