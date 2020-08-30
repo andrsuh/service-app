@@ -1,11 +1,11 @@
 package com.wine.to.up.demo.service.configuration;
 
+import com.wine.to.up.commonlib.messaging.BaseKafkaHandler;
+import com.wine.to.up.commonlib.messaging.KafkaMessageHandler;
+import com.wine.to.up.commonlib.messaging.KafkaMessageSender;
 import com.wine.to.up.demo.service.api.DemoServiceApiProperties;
 import com.wine.to.up.demo.service.api.message.KafkaMessageSentEventOuterClass.KafkaMessageSentEvent;
-import com.wine.to.up.demo.service.components.AppMetrics;
-import com.wine.to.up.demo.service.messaging.BaseKafkaHandler;
-import com.wine.to.up.demo.service.messaging.KafkaMessageHandler;
-import com.wine.to.up.demo.service.messaging.KafkaMessageSender;
+import com.wine.to.up.demo.service.components.DemoServiceMetricsCollector;
 import com.wine.to.up.demo.service.messaging.TestTopicKafkaMessageHandler;
 import com.wine.to.up.demo.service.messaging.serialization.EventDeserializer;
 import com.wine.to.up.demo.service.messaging.serialization.EventSerializer;
@@ -101,15 +101,15 @@ public class KafkaConfiguration {
      *
      * @param producerProperties       is the general producer properties. {@link #producerProperties()}
      * @param demoServiceApiProperties class containing the values of the given service's API properties (in this particular case topic name)
-     * @param appMetrics               class encapsulating the logic of the metrics collecting and publishing
+     * @param metricsCollector         class encapsulating the logic of the metrics collecting and publishing
      */
     @Bean
     KafkaMessageSender<KafkaMessageSentEvent> testTopicKafkaMessageSender(Properties producerProperties,
                                                                           DemoServiceApiProperties demoServiceApiProperties,
-                                                                          AppMetrics appMetrics) {
+                                                                          DemoServiceMetricsCollector metricsCollector) {
         // set appropriate serializer for value
         producerProperties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, EventSerializer.class.getName());
 
-        return new KafkaMessageSender<>(new KafkaProducer<>(producerProperties), demoServiceApiProperties.getMessageSentEventsTopicName(), appMetrics);
+        return new KafkaMessageSender<>(new KafkaProducer<>(producerProperties), demoServiceApiProperties.getMessageSentEventsTopicName(), metricsCollector);
     }
 }

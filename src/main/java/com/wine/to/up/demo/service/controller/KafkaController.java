@@ -1,10 +1,10 @@
 package com.wine.to.up.demo.service.controller;
 
 import com.google.protobuf.ByteString;
+import com.wine.to.up.commonlib.messaging.KafkaMessageSender;
 import com.wine.to.up.demo.service.api.dto.DemoServiceMessage;
 import com.wine.to.up.demo.service.api.message.KafkaMessageHeaderOuterClass;
 import com.wine.to.up.demo.service.api.message.KafkaMessageSentEventOuterClass.KafkaMessageSentEvent;
-import com.wine.to.up.demo.service.messaging.KafkaMessageSender;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

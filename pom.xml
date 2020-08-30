@@ -31,6 +31,7 @@
         <simpleclient.version>0.8.1</simpleclient.version>
         <postgres.driver.version>42.2.14</postgres.driver.version>
         <demo.service.api.version>0.2.0-SNAPSHOT</demo.service.api.version>
+        <service.commonlib.version>0.1.0-SNAPSHOT</service.commonlib.version>
 
         <buildnumber-maven-plugin.version>1.4</buildnumber-maven-plugin.version>
         <flyway.version>6.5.1</flyway.version>
@@ -38,6 +39,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.wine.to.up</groupId>
+            <artifactId>service-common-lib</artifactId>
+            <version>${service.commonlib.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
