@@ -60,6 +60,7 @@ public class KafkaController {
     public void sendMessage(@RequestBody String message) {
         logger.info(DemoServiceNotableEvents.SOME_DEMO_EVENT, "Test log message");
         sendMessageWithHeaders(new DemoServiceMessage(Collections.emptyMap(), message));
+        //
     }
 
     /**
