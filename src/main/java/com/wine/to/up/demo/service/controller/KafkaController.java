@@ -51,7 +51,7 @@ public class KafkaController {
      */
     @PostMapping(value = "/send")
     public void sendMessage(@RequestBody String message) {
-        log.info("Test log message {}", message);
+        log.error("Test log message {}", message);
         sendMessageWithHeaders(new DemoServiceMessage(Collections.emptyMap(), message));
         //
     }
