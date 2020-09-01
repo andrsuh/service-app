@@ -1,10 +1,13 @@
 package com.wine.to.up.demo.service.controller;
 
 import com.google.protobuf.ByteString;
+import com.wine.to.up.commonlib.annotations.InjectEventLogger;
+import com.wine.to.up.commonlib.logging.EventLogger;
 import com.wine.to.up.commonlib.messaging.KafkaMessageSender;
 import com.wine.to.up.demo.service.api.dto.DemoServiceMessage;
 import com.wine.to.up.demo.service.api.message.KafkaMessageHeaderOuterClass;
 import com.wine.to.up.demo.service.api.message.KafkaMessageSentEventOuterClass.KafkaMessageSentEvent;
+import com.wine.to.up.demo.service.logging.DemoServiceNotableEvents;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +43,9 @@ public class KafkaController {
 
     private final ExecutorService executorService = Executors.newFixedThreadPool(3);
 
+    @InjectEventLogger
+    private EventLogger logger;
+
 
     @Autowired
     public KafkaController(KafkaMessageSender<KafkaMessageSentEvent> kafkaSendMessageService) {
@@ -52,6 +58,7 @@ public class KafkaController {
      */
     @PostMapping(value = "/send")
     public void sendMessage(@RequestBody String message) {
+        logger.info(DemoServiceNotableEvents.SOME_DEMO_EVENT, "Test log message");
         sendMessageWithHeaders(new DemoServiceMessage(Collections.emptyMap(), message));
     }
 
