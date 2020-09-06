@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-<!--    default files for Spring Boot https://docs.spring.io/spring-boot/docs/current/reference/html/howto.html#howto-configure-logback-for-logging-->
-    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
-    <root level="INFO">
-        <appender-ref ref="CONSOLE" />
-    </root>
-    <logger name="org.springframework.web" level="INFO"/>
-<!--    we want to log DEBUG and higher events locally for application's internal loggers-->
-    <logger name="com.wine.to.up" level="DEBUG"/>
+    <springProfile name="!docker">
+        <!--    default files for Spring Boot https://docs.spring.io/spring-boot/docs/current/reference/html/howto.html#howto-configure-logback-for-logging-->
+        <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+        <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+        <logger name="org.springframework.web" level="INFO"/>
+        <!--    we want to log DEBUG and higher events locally for application's internal loggers-->
+        <logger name="com.wine.to.up" level="DEBUG"/>
+    </springProfile>
 
     <springProfile name="docker">
+        <springProperty name="serviceName"    source="spring.application.name" />
+
         <appender name="stash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
             <destination>logstash:4560</destination>
-            <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <customFields>{"serviceName":"${serviceName}"}</customFields>
+            </encoder>
         </appender>
 
-        <root level="ERROR">
-            <appender-ref ref="stash" />
+        <root level="INFO">
+            <appender-ref ref="stash"/>
         </root>
     </springProfile>
 </configuration>
