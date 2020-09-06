@@ -40,6 +40,7 @@ public class KafkaController {
 
     private final ExecutorService executorService = Executors.newFixedThreadPool(3);
 
+
     @Autowired
     public KafkaController(KafkaMessageSender<KafkaMessageSentEvent> kafkaSendMessageService) {
         this.kafkaSendMessageService = kafkaSendMessageService;
@@ -51,9 +52,7 @@ public class KafkaController {
      */
     @PostMapping(value = "/send")
     public void sendMessage(@RequestBody String message) {
-        log.error("Test log message {}", message);
         sendMessageWithHeaders(new DemoServiceMessage(Collections.emptyMap(), message));
-        //
     }
 
     /**

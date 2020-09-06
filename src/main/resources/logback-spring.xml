@@ -18,6 +18,7 @@
         <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
 
         <appender name="STASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+<!--            we want to sent logs to logstash in case of problems-->
             <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
                 <level>WARN</level>
             </filter>

@@ -1,7 +1,6 @@
 package com.wine.to.up.demo.service.components;
 
 import com.wine.to.up.commonlib.metrics.CommonMetricsCollector;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,6 +11,5 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-@Primary
 public class DemoServiceMetricsCollector extends CommonMetricsCollector {
 }
