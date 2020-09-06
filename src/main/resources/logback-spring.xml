@@ -22,7 +22,7 @@
             <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
                 <level>WARN</level>
             </filter>
-            <destination>logstash:4560</destination>
+            <destination>${S_LOGSTASH_HOST}</destination>
             <encoder class="net.logstash.logback.encoder.LogstashEncoder">
                 <customFields>{"serviceName":"${serviceName}"}</customFields>
             </encoder>
