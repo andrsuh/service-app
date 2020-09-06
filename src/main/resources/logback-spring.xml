@@ -34,8 +34,8 @@
                 <!-- Store log-files 1 day -->
                 <maxHistory>1</maxHistory>
 
-                <!--MaxFileSize for 1 log-file -->
-                <maxFileSize>5MB</maxFileSize>
+                <!--Controls total size of files -->
+                <totalSizeCap>5MB</totalSizeCap	>
             </rollingPolicy>
             <encoder>
                 <pattern>%d{dd.MM.yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{20} - %msg%n</pattern>
