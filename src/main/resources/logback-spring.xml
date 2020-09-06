@@ -14,6 +14,8 @@
 
     <springProfile name="docker">
         <springProperty name="serviceName"    source="spring.application.name" />
+        <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+        <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
 
         <appender name="STASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
             <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -24,27 +26,10 @@
                 <customFields>{"serviceName":"${serviceName}"}</customFields>
             </encoder>
         </appender>
-        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>log.log</file>
-            <rollingPolicy
-                    class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <!-- daily rollover -->
-                <fileNamePattern>log.%d{yyyy-MM-dd}.log</fileNamePattern>
-
-                <!-- Store log-files 1 day -->
-                <maxHistory>1</maxHistory>
-
-                <!--Controls total size of files -->
-                <totalSizeCap>5MB</totalSizeCap	>
-            </rollingPolicy>
-            <encoder>
-                <pattern>%d{dd.MM.yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{20} - %msg%n</pattern>
-            </encoder>
-        </appender>
 
         <root level="INFO">
             <appender-ref ref="STASH"/>
-            <appender-ref ref="FILE"/>
+            <appender-ref ref="CONSOLE"/>
         </root>
     </springProfile>
 </configuration>
