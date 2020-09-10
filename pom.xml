@@ -16,7 +16,7 @@
     </parent>
 
     <properties>
-        <current-version>0.1.3</current-version>
+        <current-version>0.1.4</current-version>
         <!-- Нужен для scm -->
         <git.username>andrsuh</git.username>
         <git.repo>demo-service</git.repo>
