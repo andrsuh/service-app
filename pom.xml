@@ -7,6 +7,7 @@
     <groupId>com.wine.to.up</groupId>
 <!--    TODO create-service: rename artifact-->
     <artifactId>demo-service</artifactId>
+<!--    "current-version" is used for building image and should not include a "SNAPSHOT" word. -->
     <version>${current-version}-SNAPSHOT</version>
     <packaging>jar</packaging>
 
