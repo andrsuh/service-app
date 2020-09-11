@@ -82,6 +82,7 @@ public class KafkaConfiguration {
      * @param consumerProperties is the general consumer properties. {@link #consumerProperties()}
      * @param handler            which is responsible for handling messages from this topic
      */
+    //TODO create-service: use your DemoServiceApiProperties, rename to reflect your topic name
     @Bean
     BaseKafkaHandler<KafkaMessageSentEvent> testTopicMessagesHandler(Properties consumerProperties,
                                                                      DemoServiceApiProperties demoServiceApiProperties,
@@ -103,6 +104,7 @@ public class KafkaConfiguration {
      * @param demoServiceApiProperties class containing the values of the given service's API properties (in this particular case topic name)
      * @param metricsCollector         class encapsulating the logic of the metrics collecting and publishing
      */
+    //TODO create-service: rename to reflect your topic name
     @Bean
     KafkaMessageSender<KafkaMessageSentEvent> testTopicKafkaMessageSender(Properties producerProperties,
                                                                           DemoServiceApiProperties demoServiceApiProperties,

@@ -1,7 +1,9 @@
+#TODO create-service: rename file
 version: '3'
 
 services:
   service:
+    #TODO create-service: rename
     image: demo-service:latest
     ports:
       - 8080:8080
