@@ -19,7 +19,7 @@
 
     <properties>
 <!--        TODO create-service: set version to initial (0.1.0)-->
-        <current-version>0.1.3</current-version>
+        <current-version>0.2.3</current-version>
         <!-- Нужен для scm -->
 <!--        TODO create-service: change repo-->
         <git.username>andrsuh</git.username>
@@ -36,7 +36,7 @@
         <postgres.driver.version>42.2.14</postgres.driver.version>
 <!--        TODO create-service: replace-->
         <demo.service.api.version>0.2.0-SNAPSHOT</demo.service.api.version>
-        <service.commonlib.version>0.1.0-SNAPSHOT</service.commonlib.version>
+        <service.commonlib.version>0.2.0-SNAPSHOT</service.commonlib.version>
 
         <buildnumber-maven-plugin.version>1.4</buildnumber-maven-plugin.version>
         <flyway.version>6.5.1</flyway.version>
