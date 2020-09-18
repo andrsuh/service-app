@@ -29,7 +29,7 @@
         <postgres.driver.version>42.2.14</postgres.driver.version>
         <!--        TODO create-service: replace-->
         <demo.service.api.version>0.3.0-SNAPSHOT</demo.service.api.version>
-        <service.commonlib.version>0.2.0-SNAPSHOT</service.commonlib.version>
+        <service.commonlib.version>0.2.1-SNAPSHOT</service.commonlib.version>
 
         <buildnumber-maven-plugin.version>1.4</buildnumber-maven-plugin.version>
         <flyway.version>6.5.1</flyway.version>
