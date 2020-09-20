@@ -91,6 +91,7 @@ public class KafkaController {
                     for (int j = 0; j < numOfMessages; j++) {
                         kafkaSendMessageService.sendMessage(event);
                         counter.incrementAndGet();
+                        eventLogger.info(DemoServiceNotableEvents.I_KAFKA_SEND_MESSAGE_SUCCESS, message);
                     }
                     return numOfMessages;
                 }))
@@ -107,6 +108,6 @@ public class KafkaController {
                 .sum();
 
         log.info("Sent: " + sent);
-        eventLogger.info(DemoServiceNotableEvents.I_KAFKA_SEND_MESSAGE_SUCCESS, message);
+        eventLogger.warn(DemoServiceNotableEvents.W_SOME_WARN_EVENT, "Demo warning message");
     }
 }
