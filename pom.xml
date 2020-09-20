@@ -4,7 +4,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.wine.to.up</groupId>
     <!--    TODO create-service: rename artifact-->
     <artifactId>demo-service</artifactId>
     <!--    "current-version" is used for building image and should not include a "SNAPSHOT" word. -->
@@ -12,31 +11,29 @@
     <packaging>jar</packaging>
 
     <parent>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <groupId>org.springframework.boot</groupId>
-        <version>2.3.1.RELEASE</version>
+        <groupId>com.wine.to.up</groupId>
+        <artifactId>spring-app-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
     </parent>
 
     <properties>
         <!--        TODO create-service: set version to initial (0.1.0)-->
         <current-version>0.2.0</current-version>
 
-        <lombok.version>1.18.10</lombok.version>
-        <modelmapper.version>2.3.5</modelmapper.version>
-        <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
-        <springfox-swagger-ui.version>2.9.2</springfox-swagger-ui.version>
-        <micrometer.version>1.5.2</micrometer.version>
+        <service.commonlib.version>0.2.0-SNAPSHOT</service.commonlib.version>
         <postgres.driver.version>42.2.14</postgres.driver.version>
+        <flyway.version>6.5.1</flyway.version>
         <!--        TODO create-service: replace-->
         <demo.service.api.version>0.3.0-SNAPSHOT</demo.service.api.version>
-        <service.commonlib.version>0.2.0-SNAPSHOT</service.commonlib.version>
-
-        <buildnumber-maven-plugin.version>1.4</buildnumber-maven-plugin.version>
-        <flyway.version>6.5.1</flyway.version>
-        <dockerfile-maven-plugin.version>1.4.13</dockerfile-maven-plugin.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.wine.to.up</groupId>
+            <artifactId>service-common-lib</artifactId>
+            <version>${service.commonlib.version}</version>
+        </dependency>
+
         <!-- Required: Spring-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -46,43 +43,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <!-- Required: commonlib. Includes metrics, kafka etc-->
-        <dependency>
-            <groupId>com.wine.to.up</groupId>
-            <artifactId>service-common-lib</artifactId>
-            <version>${service.commonlib.version}</version>
-        </dependency>
-
-        <!--Required: metric for monitoring-->
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-registry-prometheus</artifactId>
-            <version>${micrometer.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-
-        <!--Required: logging-->
-        <dependency>
-            <groupId>net.logstash.logback</groupId>
-            <artifactId>logstash-logback-encoder</artifactId>
-            <version>4.9</version>
-        </dependency>
-
-        <!-- Required: Swagger -->
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${springfox-swagger2.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${springfox-swagger-ui.version}</version>
         </dependency>
 
         <!-- Db -->
@@ -105,12 +65,10 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
         </dependency>
         <dependency>
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
-            <version>${modelmapper.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -129,83 +87,4 @@
             <version>${demo.service.api.version}</version>
         </dependency>
     </dependencies>
-
-    <!-- Нужен для пуша jar в репозиторий libs-snapshot-local в jfrog artifactory -->
-    <distributionManagement>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <url>http://artifactory:8081/artifactory/libs-snapshot-local</url>
-        </snapshotRepository>
-    </distributionManagement>
-
-    <build>
-        <finalName>${project.artifactId}</finalName>
-
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>11</source>
-                    <target>11</target>
-                </configuration>
-            </plugin>
-
-            <!-- Нужен для определения текущей ветки(scmBranch) -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>buildnumber-maven-plugin</artifactId>
-                <version>${buildnumber-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>create</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <doCheck>false</doCheck>
-                    <doUpdate>false</doUpdate>
-                </configuration>
-            </plugin>
-
-            <!-- Нужен для сборки docker image с тегами, и его пуша в docker registry -->
-            <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>dockerfile-maven-plugin</artifactId>
-                <version>${dockerfile-maven-plugin.version}</version>
-
-                <dependencies>
-                    <dependency>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-starter-logging</artifactId>
-                        <version>${project.parent.version}</version>
-                    </dependency>
-                </dependencies>
-
-                <configuration>
-                    <!-- those 2 properties can be unresolvable locally-->
-                    <repository>${env.DOCKER_REPO_HOST}/${project.artifactId}</repository>
-                    <tag>${scmBranch}_${current-version}</tag>
-                </configuration>
-
-                <executions>
-                    <execution>
-                        <id>build and push image</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>build</goal>
-                            <goal>push</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>
