@@ -18,7 +18,7 @@
 
     <properties>
         <!--        TODO create-service: set version to initial (0.1.0)-->
-        <current-version>0.2.0</current-version>
+        <current-version>0.3.0</current-version>
 
         <service.commonlib.version>0.2.0-SNAPSHOT</service.commonlib.version>
         <postgres.driver.version>42.2.14</postgres.driver.version>
