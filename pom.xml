@@ -12,8 +12,8 @@
 
     <parent>
         <groupId>com.wine.to.up</groupId>
-        <artifactId>spring-app-parent</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <artifactId>wine-app-parent</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
     </parent>
 
     <properties>
@@ -21,8 +21,6 @@
         <current-version>0.3.0</current-version>
 
         <service.commonlib.version>0.2.1-SNAPSHOT</service.commonlib.version>
-        <postgres.driver.version>42.2.14</postgres.driver.version>
-        <flyway.version>6.5.1</flyway.version>
         <!--        TODO create-service: replace-->
         <demo.service.api.version>0.3.0-SNAPSHOT</demo.service.api.version>
     </properties>
@@ -49,7 +47,6 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>${flyway.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -58,7 +55,6 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>${postgres.driver.version}</version>
         </dependency>
 
         <!-- Recommended-->
