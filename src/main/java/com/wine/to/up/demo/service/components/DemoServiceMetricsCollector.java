@@ -14,4 +14,13 @@ import org.springframework.stereotype.Component;
 //TODO create-service: rename
 @Component
 public class DemoServiceMetricsCollector extends CommonMetricsCollector {
+    private static final String SERVICE_NAME = "demo-service";
+
+    public DemoServiceMetricsCollector() {
+        this(SERVICE_NAME);
+    }
+
+    private DemoServiceMetricsCollector(String serviceName) {
+        super(serviceName);
+    }
 }
