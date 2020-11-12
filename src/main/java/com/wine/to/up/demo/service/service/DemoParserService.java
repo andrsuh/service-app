@@ -28,7 +28,7 @@ import static com.wine.to.up.demo.service.logging.DemoServiceNotableEvents.*;
 public class DemoParserService {
     private static final String PAGE_URL = "http://wine.ru?page=";
     private static final String PARSER_NAME = "demo-parser";
-    private static final int PAGE_NUM = 100;
+    private static final int PAGE_NUM = 15;
 
     private static final String PARSING_IN_PROGRESS_GAUGE = "parsing_in_progress";
 
@@ -39,8 +39,8 @@ public class DemoParserService {
     private DemoServiceMetricsCollector metrics;
 
     private static final Random random = new Random();
-    private static final Sleeper sleeper300 = new Sleeper(300);
-    private static final Sleeper sleeper1000 = new Sleeper(1000);
+    private static final Sleeper sleeper50 = new Sleeper(50);
+    private static final Sleeper sleeper500 = new Sleeper(500);
 
     private final Parser parser;
     private final HttpClient httpClient;
@@ -57,7 +57,7 @@ public class DemoParserService {
         Metrics.gauge(PARSING_IN_PROGRESS_GAUGE, List.of(Tag.of(PARSER_NAME_TAG, PARSER_NAME)), parsingInProgress);
     }
 
-    @Scheduled(fixedDelay = 30_000)
+    @Scheduled(fixedDelay = 1_000)
     @Timed
     public List<Wine> performParsing() {
         List<Wine> resultList = new ArrayList<>();
@@ -87,11 +87,11 @@ public class DemoParserService {
 
     static class Parser {
         List<Wine> parse(String htmlPage) {
-            failWithProbability(5, ParserException::new);
+            failWithProbability(7, ParserException::new);
             return Stream.iterate(0, v -> v + 1)
                     .limit(random.nextInt(20))
                     .map(i -> new Wine())
-                    .peek(w -> sleeper300.threadSleepRand())
+                    .peek(w -> sleeper50.threadSleepRand())
                     .collect(Collectors.toList());
         }
 
@@ -102,7 +102,7 @@ public class DemoParserService {
     static class HttpClient {
         String fetchHttpPage(String url) {
             failWithProbability(2, HttpClientException::new);
-            sleeper1000.threadSleepRand();
+            sleeper500.threadSleepRand();
             return "Fetched :" + url;
         }
 
