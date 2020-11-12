@@ -82,6 +82,7 @@ public class DemoParserService {
         }
 
         metrics.incParsingComplete(PARSER_NAME);
+        parsingInProgress.decrementAndGet();
         return resultList;
     }
 
