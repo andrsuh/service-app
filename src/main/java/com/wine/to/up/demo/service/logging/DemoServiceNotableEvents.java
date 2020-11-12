@@ -9,7 +9,10 @@ public enum DemoServiceNotableEvents implements NotableEvent {
     W_SOME_WARN_EVENT("Warn situation. Description: {}"),
 
     W_PAGE_PARSING_FAILED("Page parsing failed. Url : {}"),
-    E_HTML_PAGE_FETCHING_FAILED("Did not manage to fetch url : {}");
+    E_HTML_PAGE_FETCHING_FAILED("Did not manage to fetch url : {}"),
+
+    DEV_UNEXPECTED_ERROR("Unexpected : {}"),
+    ;
 
     private final String template;
 
