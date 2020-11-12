@@ -33,14 +33,14 @@ public class DemoServiceMetricsCollector extends CommonMetricsCollector {
     }
 
     public void incParsingStarted(String parserName) {
-        Metrics.counter(PARSING_STARTED_COUNTER, PARSER_NAME_TAG).increment();
+        Metrics.counter(PARSING_STARTED_COUNTER, PARSER_NAME_TAG, parserName).increment();
     }
 
     public void incParsingComplete(String parserName) {
-        Metrics.counter(PARSING_COMPLETE_COUNTER, PARSER_NAME_TAG).increment();
+        Metrics.counter(PARSING_COMPLETE_COUNTER, PARSER_NAME_TAG, parserName).increment();
     }
 
     public void incParsingFailed(String parserName) {
-        Metrics.counter(PARSING_FAILED_COUNTER, PARSER_NAME_TAG).increment();
+        Metrics.counter(PARSING_FAILED_COUNTER, PARSER_NAME_TAG, parserName).increment();
     }
 }
