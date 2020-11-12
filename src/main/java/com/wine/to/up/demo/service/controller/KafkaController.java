@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PreDestroy;
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -108,9 +109,13 @@ public class KafkaController {
         eventLogger.warn(DemoServiceNotableEvents.W_SOME_WARN_EVENT, "Demo warning message");
     }
 
-    @GetMapping(value = "/newController")
+    @GetMapping(value = "/exception")
     public void test() {
         log.error("Not implemented yet", new RuntimeException("fake exception to se the stacktrace"));
     }
 
+    @PreDestroy
+    public void destroy() {
+        executorService.shutdownNow();
+    }
 }
